@@ -5,6 +5,7 @@ const sections = [...document.querySelectorAll(".smile")];
 const timerElement = document.querySelector(".timer");
 let startTime;
 let timerInterval;
+let gameStarted = false;
 
 const result = [
   "🍎", "🍌", "🍍", "🍉", "🍇", "🍓", "🍒", "🍑", "🥑",
@@ -34,6 +35,7 @@ function stopTimer() {
 }
 
 start.addEventListener("click", () => {
+  gameStarted = true;
   hideCart();
   startTimer();
 });
@@ -51,6 +53,8 @@ const myRes = [];
 let isProcessing = false;
 
 function onClick(event) {
+  if (!gameStarted) return; 
+  
   if (event.target.classList.contains("main-section")) {
     if (isProcessing) return;
     event.target.firstChild.style.display = "block";
@@ -76,6 +80,7 @@ function onClick(event) {
 reset.addEventListener("click", resetGame);
 
 function resetGame() {
+  gameStarted = false;
   mixedArr.forEach((_, i) => {
     sections[i].textContent = "";
     sections[i].style.display = "none";
