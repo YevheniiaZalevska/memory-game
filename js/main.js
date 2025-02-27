@@ -6,6 +6,8 @@ const timerElement = document.querySelector(".timer");
 let startTime;
 let timerInterval;
 let gameStarted = false;
+let mistakeCount = 0;
+const maxMistakes = 4;
 
 const result = [
   "🍎", "🍌", "🍍", "🍉", "🍇", "🍓", "🍒", "🥥", "🥑",
@@ -34,26 +36,51 @@ function stopTimer() {
   clearInterval(timerInterval);
 }
 
+function showGameOverMessage() {
+  const gameOverMessage = document.createElement("div");
+  gameOverMessage.textContent = "Game Over! You made too many mistakes.";
+  gameOverMessage.style.position = "fixed";
+  gameOverMessage.style.top = "50%";
+  gameOverMessage.style.left = "50%";
+  gameOverMessage.style.transform = "translate(-50%, -50%)";
+  gameOverMessage.style.padding = "20px";
+  gameOverMessage.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+  gameOverMessage.style.color = "white";
+  gameOverMessage.style.fontSize = "24px";
+  gameOverMessage.style.borderRadius = "10px";
+  gameOverMessage.style.textAlign = "center";
+  document.body.appendChild(gameOverMessage);
+  
+  setTimeout(() => {
+    gameOverMessage.remove();
+    resetGame();
+  }, 3000);
+}
+
 start.addEventListener("click", () => {
   gameStarted = true;
-  hideCart();
-  startTimer();
-});
-
-function hideCart() {
+  mistakeCount = 0;
   mixedArr = shuffleArray(result);
+
   mixedArr.forEach((item, i) => {
     sections[i].textContent = item;
-    sections[i].style.display = "none";
+    sections[i].style.display = "block";
   });
-}
+
+  setTimeout(() => {
+    sections.forEach(section => {
+      section.style.display = "none";
+    });
+    startTimer();
+  }, 3000);
+});
 
 container.addEventListener("click", onClick);
 const myRes = [];
 let isProcessing = false;
 
 function onClick(event) {
-  if (!gameStarted) return; 
+  if (!gameStarted) return;
   
   if (event.target.classList.contains("main-section")) {
     if (isProcessing) return;
@@ -66,9 +93,14 @@ function onClick(event) {
         if (myRes[0].textContent !== myRes[1].textContent) {
           myRes[0].style.display = "none";
           myRes[1].style.display = "none";
+          mistakeCount++;
         }
         myRes.length = 0;
         isProcessing = false;
+        
+        if (mistakeCount >= maxMistakes) {
+          showGameOverMessage();
+        }
       }, 1000);
     }
   }
@@ -81,6 +113,7 @@ reset.addEventListener("click", resetGame);
 
 function resetGame() {
   gameStarted = false;
+  mistakeCount = 0;
   mixedArr.forEach((_, i) => {
     sections[i].textContent = "";
     sections[i].style.display = "none";
