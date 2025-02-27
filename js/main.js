@@ -7,7 +7,7 @@ let startTime;
 let timerInterval;
 let gameStarted = false;
 let mistakeCount = 0;
-const maxMistakes = 4;
+const maxMistakes = 6;
 
 const result = [
   "🍎", "🍌", "🍍", "🍉", "🍇", "🍓", "🍒", "🥥", "🥑",
