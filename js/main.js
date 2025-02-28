@@ -57,6 +57,27 @@ function showGameOverMessage() {
   }, 3000);
 }
 
+function showWinMessage() {
+  const winMessage = document.createElement("div");
+  winMessage.textContent = "🎉 You Win! 🎉";
+  winMessage.style.position = "fixed";
+  winMessage.style.top = "50%";
+  winMessage.style.left = "50%";
+  winMessage.style.transform = "translate(-50%, -50%)";
+  winMessage.style.padding = "20px";
+  winMessage.style.backgroundColor = "rgba(0, 128, 0, 0.8)";
+  winMessage.style.color = "white";
+  winMessage.style.fontSize = "24px";
+  winMessage.style.borderRadius = "10px";
+  winMessage.style.textAlign = "center";
+  document.body.appendChild(winMessage);
+  
+  setTimeout(() => {
+    winMessage.remove();
+    resetGame();
+  }, 3000);
+}
+
 start.addEventListener("click", () => {
   gameStarted = true;
   mistakeCount = 0;
@@ -81,9 +102,10 @@ let isProcessing = false;
 
 function onClick(event) {
   if (!gameStarted) return;
-  
+
   if (event.target.classList.contains("main-section")) {
     if (isProcessing) return;
+
     event.target.firstChild.style.display = "block";
     myRes.push(event.target.firstChild);
 
@@ -97,15 +119,17 @@ function onClick(event) {
         }
         myRes.length = 0;
         isProcessing = false;
-        
+
         if (mistakeCount >= maxMistakes) {
           showGameOverMessage();
         }
       }, 1000);
     }
   }
+
   if (document.querySelectorAll(".smile[style='display: block;']").length === result.length) {
     stopTimer();
+    showWinMessage();
   }
 }
 
